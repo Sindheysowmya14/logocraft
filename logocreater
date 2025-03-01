@@ -1,0 +1,28 @@
+import torch   
+from diffusers import StableDiffusionPipeline
+from PIL import Image
+
+
+pipeline = StableDiffusionPipeline.from_pretrained(
+    "stabilityai/stable-diffusion-2-1", 
+    torch_dtype=torch.float16  
+)
+
+
+if torch.cuda.is_available():
+    pipeline = pipeline.to('cuda')  
+else:
+    print("CUDA is not available, using CPU instead.")
+    pipeline = pipeline.to('cpu')  
+
+
+prompt = "A luxurious logo featuring gold accents, elegant typography, and intricate patterns. The design should evoke feelings of sophistication and exclusivity, with a royal color scheme of deep purple, black, and gold."
+image = pipeline(prompt=prompt).images[0]
+
+image.show() 
+
+
+image.save("generated_logo.png")
+image.show()
+from IPython.display import display
+display(image)
